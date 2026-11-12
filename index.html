@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokéTech</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="poketech">
+  <div class="console">
+    <div class="bezel">
+      <div class="screen" id="pt-screen" aria-live="polite">
+        <div class="eyebrow">INFORMÁTICA · PORTAFOLIO 2026</div>
+        <div id="pt-content">
+          <h1>POKÉTECH</h1>
+          <div class="eyebrow">UNA AVENTURA INFORMÁTICA</div>
+          <div class="pixel-ball" aria-hidden="true"></div>
+          <p style="text-align:center;font-size:13px">
+            OCHO REGISTROS. UNA GRAN AVENTURA.
+          </p>
+          <button class="action start" data-page="menu">
+            ▶ PRESIONA START
+          </button>
+          <p class="eyebrow">PULSA PARA COMENZAR</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-controls" aria-hidden="true">
+      <div class="dpad"></div>
+      <div class="console-brand">
+        <div class="brand-title">POKÉTECH</div>
+        <div class="brand-line"></div>
+        <div class="brand-subtitle">EXPLORÁ · APRENDÉ · DESCUBRÍ</div>
+      </div>
+      <div class="buttons">
+        <div class="round red"></div>
+        <div class="round blue"></div>
+      </div>
+    </div>
+
+    <div class="console-footer">
+      <span class="footer-light"></span>
+      SISTEMA LISTO
+      <span class="footer-separator">·</span>
+      ¡COMIENZA LA AVENTURA!
+    </div>
+  </div>
+
+  <!-- CÓDIGO DE LA CERRADURA: borrá la línea de abajo y pegá en su lugar tu código completo de Arduino IDE, sin modificarlo -->
+  <script type="text/plain" id="code-cerradura">
+#include <Keypad.h>
+#include <Servo.h>
+
+// 1. Configuración del Teclado Matricial 4x4
+const byte FILAS = 4;
+const byte COLUMNAS = 4;
+
+char teclas[FILAS][COLUMNAS] = {
+  {'1', '2', '3', 'A'},  // S1 a S3
+  {'4', '5', '6', 'B'},  // S5 a S7
+  {'7', '8', '9', 'C'},  // S9 a S11
+  {'*', '0', '#', 'D'}   // S4 (Abrir), S8 (Reset), S12 (Cambiar), S16 (Confirmar)
+};
+
+byte pinesFilas[FILAS] = {9, 8, 7, 6};      // R1 a R4
+byte pinesColumnas[COLUMNAS] = {5, 4, 3, 2}; // C1 a C4
+
+Keypad teclado = Keypad(makeKeymap(teclas), pinesFilas, pinesColumnas, FILAS, COLUMNAS);
+
+// 2. Configuración del Servomotor
+Servo miServo;
+const int PIN_SERVO = 11;
+const int ANGULO_CERRADO = 160;
+const int ANGULO_ABIERTO = 60;
+
+// 3. Configuración de LEDs
+const int LED_ROJO = 10;
+const int LED_VERDE = 12;
+
+// 4. Variables de Control
+String claveCorrecta = "1234";
+String claveIngresada = "";
+bool modoCambioClave = false;
+
+void setup() {
+  Serial.begin(9600);
+
+  miServo.attach(PIN_SERVO);
+  miServo.write(ANGULO_CERRADO);
+
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(LED_ROJO, OUTPUT);
+
+  // Asegurar que los LEDs arranquen apagados
+  digitalWrite(LED_VERDE, LOW);
+  digitalWrite(LED_ROJO, LOW);
+
+  Serial.println("=========================================");
+  Serial.println("  SISTEMA DE CERRADURA ELECTRÓNICA LISTO ");
+  Serial.println("=========================================");
+}
+
+void loop() {
+  char tecla = teclado.getKey();
+
+  if (tecla) {
+    Serial.print("Tecla detectada: ");
+    Serial.println(tecla);
+
+    // Si se presiona un número (S1 a S10)
+    if (tecla >= '0' && tecla <= '9') {
+      claveIngresada += tecla;
+      Serial.print("Ingresando: ");
+      Serial.println(claveIngresada);
+    } 
+    
+    // S4 ('A'): Validar clave y abrir puerta
+    else if (tecla == 'A') {
+      if (!modoCambioClave) {
+        verificarYAbrir();
+      }
+    } 
+    
+    // S8 ('B'): Restablecer clave predeterminada
+    else if (tecla == 'B') {
+      claveCorrecta = "1234";
+      claveIngresada = "";
+      modoCambioClave = false;
+      digitalWrite(LED_VERDE, LOW);
+      digitalWrite(LED_ROJO, LOW);
+      Serial.println("[RESET] Clave restablecida a 1234");
+      parpadearLed(LED_VERDE, 3);
+    } 
+    
+    // S12 ('C'): Entrar en modo cambio de clave
+    else if (tecla == 'C') {
+      if (claveIngresada == claveCorrecta) {
+        modoCambioClave = true;
+        claveIngresada = "";
+        digitalWrite(LED_VERDE, HIGH); // LED Verde fijo en modo edición
+        Serial.println("[CAMBIO] Ingrese nueva clave y presione S16.");
+      } else {
+        Serial.println("[ERROR] Clave actual incorrecta.");
+        parpadearLed(LED_ROJO, 2);
+        claveIngresada = "";
+      }
+    } 
+    
+    // S16 ('D'): Guardar nueva clave
+    else if (tecla == 'D') {
+      if (modoCambioClave) {
+        if (claveIngresada.length() > 0) {
+          claveCorrecta = claveIngresada;
+          Serial.print("[ÉXITO] Nueva clave guardada: ");
+          Serial.println(claveCorrecta);
+          modoCambioClave = false;
+          digitalWrite(LED_VERDE, LOW); // Apaga el LED verde
+          parpadearLed(LED_VERDE, 2);
+        } else {
+          Serial.println("[ERROR] La clave no puede estar vacía.");
+        }
+        claveIngresada = "";
+      }
+    }
+  }
+}
+
+void verificarYAbrir() {
+  if (claveIngresada == claveCorrecta) {
+    Serial.println(">> ACCESO CONCEDIDO <<");
+    digitalWrite(LED_VERDE, HIGH);
+    digitalWrite(LED_ROJO, LOW);
+    
+    miServo.write(ANGULO_ABIERTO);
+    delay(4000); // Puerta abierta durante 4 segundos
+    
+    miServo.write(ANGULO_CERRADO);
+    digitalWrite(LED_VERDE, LOW); // Apaga obligatoriamente el LED verde
+    Serial.println("Puerta bloqueada.");
+  } else {
+    Serial.println(">> ACCESO DENEGADO <<");
+    digitalWrite(LED_VERDE, LOW);
+    digitalWrite(LED_ROJO, HIGH);
+    delay(3000);
+    digitalWrite(LED_ROJO, LOW);
+  }
+  
+  claveIngresada = "";
+}
+
+void parpadearLed(int pin, int veces) {
+  for (int i = 0; i < veces; i++) {
+    digitalWrite(pin, HIGH);
+    delay(150);
+    digitalWrite(pin, LOW);
+    delay(150);
+  }
+}
+  </script>
+
+  <script type="text/plain" id="code-garaje">
+#include <Arduino.h>
+#include <IRremote.hpp>
+#include <Servo.h>
+
+const int IR_PIN = 9;      // O el pin donde tengas el servo
+const int RECV_PIN = 11;   // Pin del receptor IR
+const int SERVO_PIN = 9;   // Pin de señal del servo
+
+// Reemplaza con el código del botón que elegiste para controlar el portón
+const unsigned long BOTON_PORTON = 0xE718FF00; 
+
+Servo porton;
+bool estaAbierto = false; // Estado inicial del portón (cerrado)
+
+void setup() {
+  Serial.begin(9600);
+  IrReceiver.begin(RECV_PIN, ENABLE_LED_FEEDBACK);
+  
+  porton.attach(SERVO_PIN);
+  porton.write(0); // Posición inicial: 0 grados (cerrado)
+  Serial.println("Sistema listo. Presiona el boton configurado para abrir/cerrar.");
+}
+
+void loop() {
+  if (IrReceiver.decode()) {
+    // Leemos el código recibido ignorando las repeticiones (0x0)
+    unsigned long codigo = IrReceiver.decodedIRData.decodedRawData;
+
+    if (codigo == BOTON_PORTON) {
+      if (!estaAbierto) {
+        Serial.println("Abriendo porton...");
+        // Movimiento suave para abrir hasta 90 grados
+        for (int pos = 0; pos <= 90; pos += 2) { 
+          porton.write(pos);
+          delay(15);
+        }
+        estaAbierto = true;
+      } else {
+        Serial.println("Cerrando porton...");
+        // Movimiento suave para cerrar hasta 0 grados
+        for (int pos = 90; pos >= 0; pos -= 2) { 
+          porton.write(pos);
+          delay(15);
+        }
+        estaAbierto = false;
+      }
+    }
+    
+    IrReceiver.resume(); // Listo para la siguiente lectura
+  }
+}
+  </script>
+</div>
+<script src="script.js" defer></script>
+</body>
+</html>

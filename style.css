@@ -1,0 +1,335 @@
+    /* ===== BASE ===== */
+    #poketech {
+      --red: #d92735;
+      --red-dark: #941b27;
+      --blue: #3476bd;
+      --yellow: #f5cb52;
+      --ink: #171717;
+      --white: #f4f0e8;
+      font-family: "Courier New", monospace;
+      color: var(--ink);
+      padding: 20px 8px;
+      background: #dedbd2;
+    }
+    #poketech * { box-sizing: border-box; }
+
+    /* ===== CARCASA Y PANTALLA ===== */
+    #poketech .console {
+      max-width: 720px;
+      margin: auto;
+      padding: 22px;
+      background: linear-gradient(135deg, #f0444d 0%, #d92735 48%, #941b27 100%);
+      border: 4px solid #171717;
+      border-radius: 28px 28px 48px 28px;
+      box-shadow:
+        inset 3px 3px 0 #ffffff55,
+        inset -4px -4px 0 #00000030,
+        5px 7px 0 #77746e,
+        0 12px 28px #0002;
+    }
+    #poketech .bezel {
+      background: #242424;
+      border: 3px solid #111111;
+      padding: 15px;
+      border-radius: 15px 15px 25px 15px;
+      box-shadow: inset 0 0 0 2px #555555;
+    }
+    #poketech .screen {
+      background-color: #c4d0a0;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, #00000008 4px);
+      color: #252b1e;
+      border: 4px solid #111111;
+      box-shadow: inset 0 0 12px #00000025;
+      min-height: 360px;
+      padding: 22px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    #poketech .screen h1 {
+      font-size: clamp(27px, 6vw, 43px);
+      letter-spacing: 3px;
+      margin: 8px 0;
+      text-align: center;
+    }
+    #poketech .screen h2 { font-size: 19px; margin: 12px 0; }
+    #poketech .eyebrow { font-size: 11px; letter-spacing: 2px; text-align: center; }
+    #poketech .pixel-ball {
+      width: 86px;
+      height: 86px;
+      border: 4px solid var(--ink);
+      border-radius: 50%;
+      margin: 25px auto;
+      background: linear-gradient(to bottom, var(--red) 0 44%, var(--ink) 44% 51%, #f4f0dc 51% 100%);
+      position: relative;
+      image-rendering: pixelated;
+    }
+    #poketech .pixel-ball:after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 4px solid var(--ink);
+      background: #e8e8d9;
+      border-radius: 50%;
+      top: 25px;
+      left: 25px;
+    }
+
+    /* ===== BOTONES ===== */
+    #poketech button {
+      font-family: inherit;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      color: var(--ink);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+    #poketech button:focus-visible,
+    #poketech a.view-work:focus-visible {
+      outline: 3px dashed #f5d547;
+      outline-offset: 4px;
+    }
+    #poketech button:active { filter: brightness(0.92); }
+    #poketech .action {
+      display: block;
+      width: 100%;
+      max-width: 310px;
+      margin: 12px auto;
+      padding: 13px 10px;
+      background: #e8e7d9;
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      text-align: left;
+    }
+    #poketech button[data-page] {
+      border: 3px solid #171717;
+      border-radius: 6px;
+      box-shadow: 0 4px 0 #171717;
+      padding: 10px 14px;
+    }
+    #poketech button[data-page]:hover {
+      filter: brightness(1.12);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #171717;
+    }
+    #poketech button[data-page]:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #171717;
+    }
+    #poketech .action:hover,
+    #poketech .entry:hover { background: #f5cb52; }
+    #poketech .start {
+      text-align: center;
+      background: var(--red);
+      color: white;
+      max-width: 220px;
+    }
+    #poketech button[data-page="pokedex"],
+    #poketech button[data-page="equipo"],
+    #poketech button[data-page="acerca"] {
+      background: #f4f0e8;
+      color: #171717;
+    }
+    #poketech button[data-action="back"] {
+      background: #242424;
+      color: #ffffff;
+      border: 2px solid #ffffff;
+      border-radius: 4px;
+      padding: 8px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 3px 0 #111111;
+    }
+    #poketech button[data-action="back"]:hover { background: #444444; }
+
+    /* Botón VER TRABAJO (enlace) */
+    #poketech a.view-work {
+      background: #d92735;
+      color: #ffffff;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 1px;
+      border: 3px solid #171717;
+      border-radius: 6px;
+      box-shadow: 0 4px 0 #171717;
+      padding: 10px 14px;
+      max-width: 220px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+    #poketech a.view-work:hover {
+      background: #d92735;
+      filter: brightness(1.12);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #171717;
+    }
+    #poketech a.view-work:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #171717;
+    }
+
+    /* ===== LISTA Y FICHAS ===== */
+    #poketech .entry-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 14px;
+    }
+    #poketech .entry {
+      background: #d9dfbd;
+      text-align: left;
+      min-height: 86px;
+      overflow-wrap: anywhere;
+    }
+    #poketech .entry small { display: block; margin-bottom: 7px; color: #57584c; }
+    #poketech .entry strong { font-size: 12px; }
+    #poketech .detail {
+      border: 2px solid var(--ink);
+      background: #d9dfbd;
+      padding: 14px;
+      margin: 15px 0;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+    #poketech .detail p { font-size: 14px; }
+    #poketech .status { font-size: 11px; text-align: center; margin-top: 18px; }
+
+    /* ===== CÓDIGO DE ARDUINO ===== */
+    #poketech .code-view {
+      margin: 12px 0;
+      padding: 12px;
+      max-height: 280px;
+      overflow: auto;
+      background: #f4f0e8;
+      color: #171717;
+      border: 3px solid #171717;
+      border-radius: 6px;
+      box-shadow: inset 0 0 0 2px #d6d2c6;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: pre;
+      text-align: left;
+    }
+    #poketech .code-view code { font-family: inherit; }
+    #poketech .tk-az { color: #1f5fa8; font-weight: bold; }
+    #poketech .tk-na { color: #c2570c; }
+    #poketech .tk-gr { color: #6b6b63; font-style: italic; }
+
+    /* Botón DESCARGAR (enlace) */
+    #poketech a.btn-link {
+      background: #f4f0e8;
+      color: #171717;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 1px;
+      border: 3px solid #171717;
+      border-radius: 6px;
+      box-shadow: 0 4px 0 #171717;
+      padding: 10px 14px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+    #poketech a.btn-link:hover {
+      filter: brightness(1.12);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #171717;
+    }
+    #poketech a.btn-link:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #171717;
+    }
+
+    /* ===== PANEL INFERIOR ===== */
+    #poketech .console-controls {
+      display: grid;
+      grid-template-columns: 80px minmax(0, 1fr) 108px;
+      align-items: center;
+      justify-items: center;
+      gap: 8px;
+      min-height: 112px;
+      padding: 12px;
+      margin-top: 16px;
+      background: #f4f0e8;
+      border: 3px solid #171717;
+      border-radius: 12px 12px 25px 12px;
+      box-shadow: inset 0 2px 0 #ffffff, 0 3px 0 #991b27;
+    }
+    #poketech .dpad { width: 76px; height: 76px; position: relative; margin: 0; align-self: center; }
+    #poketech .dpad:before,
+    #poketech .dpad:after {
+      content: "";
+      position: absolute;
+      background: #202020;
+      border: 2px solid #111111;
+      border-radius: 3px;
+      box-shadow: inset 1px 1px 0 #555555;
+    }
+    #poketech .dpad:before { width: 26px; height: 76px; left: 25px; }
+    #poketech .dpad:after { height: 26px; width: 76px; top: 25px; }
+    #poketech .console-brand {
+      width: 100%;
+      min-width: 0;
+      text-align: center;
+      color: #25252b;
+      padding: 7px 3px;
+      border-left: 1px solid #c5c2b9;
+      border-right: 1px solid #c5c2b9;
+    }
+    #poketech .brand-title { font-size: 16px; font-weight: 900; letter-spacing: 2px; }
+    #poketech .brand-line { height: 3px; width: 34px; background: #d8323e; margin: 7px auto; }
+    #poketech .brand-subtitle { font-size: 8px; font-weight: bold; line-height: 1.5; letter-spacing: 0.5px; }
+    #poketech .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0;
+      transform: rotate(-25deg);
+    }
+    #poketech .round {
+      flex-shrink: 0;
+      width: 43px;
+      height: 43px;
+      border: 3px solid #171717;
+      border-radius: 50%;
+      box-shadow: inset 2px 2px 0 #ffffff55, 2px 4px 0 #171717;
+    }
+    #poketech .round.red { background: #d92735; }
+    #poketech .round.blue { background: #3476bd; }
+    #poketech .console-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      padding: 10px 5px 3px;
+      color: #fff4ed;
+      font-family: "Courier New", monospace;
+      font-size: 9px;
+      font-weight: bold;
+      letter-spacing: 1.2px;
+      line-height: 1.6;
+      text-align: center;
+      text-shadow: 1px 1px 0 #77121b;
+    }
+    #poketech .footer-light {
+      width: 7px;
+      height: 7px;
+      display: inline-block;
+      border-radius: 50%;
+      background: #f5cb52;
+      border: 1px solid #171717;
+      box-shadow: 0 0 4px #f5cb52;
+    }
+    #poketech .footer-separator { color: #f5cb52; }
+
+    /* ===== CELULARES ===== */
+    @media (max-width: 420px) {
+      #poketech .console { padding: 10px; }
+      #poketech .bezel { padding: 8px; }
+      #poketech .screen { padding: 15px 10px; min-height: 330px; }
+      #poketech .entry-grid { gap: 6px; }
+      #poketech .console-controls { grid-template-columns: 58px minmax(0, 1fr) 88px; gap: 4px; padding: 12px 5px; }
+      #poketech .dpad { transform: scale(0.78); transform-origin: center; }
+      #poketech .buttons { gap: 7px; transform: rotate(-25deg) scale(0.82); }
+    }
